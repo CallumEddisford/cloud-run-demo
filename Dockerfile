@@ -4,20 +4,16 @@ FROM node:14
 # set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+# add app
+COPY . .
 
 # install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
 RUN npm install --silent
-RUN npm install react-scripts@4.0.3 -g --silent
+RUN npm install -g --silent serve
+RUN npm run build
 
-# add app
-COPY . ./
+ADD start.sh /
+RUN chmod +x /start.sh
 
-# expose externally
 EXPOSE 443
-
-# start app
-CMD ["npm", "start"]
+CMD ["/start.sh"]
